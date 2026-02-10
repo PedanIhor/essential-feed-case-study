@@ -111,11 +111,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
             "image": imageURL.absoluteString,
             "description": description,
             "location": location,
-        ].reduce(into: [String: Any]()) { (partialResult, pair) in
-            if pair.value != nil {
-                partialResult[pair.key] = pair.value!
-            }
-        }
+        ].compactMapValues { $0 }
         return (item, json)
     }
     
