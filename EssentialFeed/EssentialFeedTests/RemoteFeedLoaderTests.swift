@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import EssentialFeed
+import EssentialFeed
 
 
 final class RemoteFeedLoaderTests: XCTestCase {
@@ -72,6 +72,40 @@ final class RemoteFeedLoaderTests: XCTestCase {
         expect(sut, toCompleteWith: .success([])) {
             let emptyListJSON = Data("{\"items\" : []}".utf8)
             client.complete(withStatusCode: 200, data: emptyListJSON)
+        }
+    }
+    
+    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+        
+        let item1 = FeedItem(
+            id: UUID(),
+            imageURL: URL(string: "http://item1-image-url.com")!
+        )
+        let item1JSON: [String: Any]  = [
+            "id": item1.id.uuidString,
+            "image": item1.imageURL.absoluteString
+        ]
+        
+        let item2 = FeedItem(
+            id: UUID(),
+            description: "a descriotion",
+            location: "a location",
+            imageURL: URL(string: "http://item2-image-url.com")!
+        )
+        let item2JSON: [String: Any] = [
+            "id": item2.id.uuidString,
+            "image": item2.imageURL.absoluteString,
+            "description": item2.description as Any,
+            "location": item2.location as Any,
+        ]
+        
+        let itemsJSON: [String: Any] = ["items": [item1JSON, item2JSON]]
+        let expectedItems: [FeedItem] = [item1, item2]
+        
+        expect(sut, toCompleteWith: .success(expectedItems)) {
+            let jsonData = try! JSONSerialization.data(withJSONObject: itemsJSON)
+            client.complete(withStatusCode: 200, data: jsonData)
         }
     }
     
