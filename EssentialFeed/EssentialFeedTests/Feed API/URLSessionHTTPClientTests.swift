@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import EssentialFeed
+import EssentialFeed
 
 class URLSessionHTTPClient: HTTPClient {
     private let session: URLSession
