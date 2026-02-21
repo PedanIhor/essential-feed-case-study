@@ -88,7 +88,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
             imageURL: URL(string: "http://item2-image-url.com")!
         )
         
-        let expectedItems: [FeedItem] = [item1.model, item2.model]
+        let expectedItems: [FeedImage] = [item1.model, item2.model]
         
         expect(sut, toCompleteWith: .success(expectedItems)) {
             let jsonData = makeItemsJSON([item1.json, item2.json])
@@ -122,8 +122,8 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         return (sut, client)
     }
     
-    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
-        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
+        let item = FeedImage(id: id, description: description, location: location, url: imageURL)
         let json = [
             "id": id.uuidString,
             "image": imageURL.absoluteString,
